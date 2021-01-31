@@ -1,0 +1,27 @@
+---
+-
+  name: play1
+  hosts:  target1
+  become: true
+  vars:
+    type_of_webserver: Nginx_server
+  tasks: 
+      - name: install nginx
+        yum: name=nginx state=latest
+
+      - name: copy index.html 
+        template:
+            src: index.html
+            dest: /usr/share/nginx/html
+        notify: restart nginx
+
+      - name: enable the service
+        service:
+            name: nginx
+            enabled: yes
+            state: started
+
+  handlers :
+     - name : restart nginx
+       service : name=nginx state=restarted
+   
